@@ -50,6 +50,13 @@ async function run() {
       const service = await serviceCollection.findOne(query);
       res.send(service);
     });
+
+    // review section implemenation
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
   } finally {
   }
 }
