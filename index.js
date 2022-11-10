@@ -11,11 +11,29 @@ app.use(express.json());
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qs0fhx1.mongodb.net/?retryWrites=true&w=majority`;
 
+// console.log(uri);
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
+
+async function run() {
+  try {
+    const serviceCollection = client.db("serviceReview").collection("services");
+    const reviewCollection = client.db("serviceReview").collection("reviews");
+
+    app.get("/home", async (req, res) => {
+      const query = {};
+      const cursor = serviceCollection.find(query).limit(3);
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+  } finally {
+  }
+}
+run().catch((err) => console.error(err));
 
 app.get("/", (req, res) => {
   res.send("Naturegraphy server is running successfully");
@@ -26,6 +44,3 @@ app.listen(port, () => {
 });
 
 module.exports = app;
-
-// iuZka0oYDHKGVNwf
-// naturegraphy_user
