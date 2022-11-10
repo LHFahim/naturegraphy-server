@@ -2,16 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5000;
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
-// middlewares
+//middlewares
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qs0fhx1.mongodb.net/?retryWrites=true&w=majority`;
-
-// console.log(uri);
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -19,6 +17,7 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+// init
 async function run() {
   try {
     const serviceCollection = client.db("serviceReview").collection("services");
@@ -51,7 +50,7 @@ async function run() {
       res.send(service);
     });
 
-    // review section implemenation
+    // review section implementation
     app.post("/reviews", async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
@@ -76,11 +75,11 @@ async function run() {
 run().catch((err) => console.error(err));
 
 app.get("/", (req, res) => {
-  res.send("Naturegraphy server is running successfully");
+  res.send("Naturegraphy server is running");
 });
 
 app.listen(port, () => {
-  console.log("Naturegraphy server is running successfully on port:", port);
+  console.log("Naturegraphy server is running on port:", port);
 });
 
 module.exports = app;
